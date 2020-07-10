@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.pparreno.myweather.R
 import com.pparreno.myweather.models.CityWeather
+import com.pparreno.myweather.utils.Utils
+import java.util.*
 
 class MainAdapter(var data: LiveData<List<CityWeather>>) : RecyclerView.Adapter<MainItemViewHolder>() {
 
@@ -27,7 +29,8 @@ class MainAdapter(var data: LiveData<List<CityWeather>>) : RecyclerView.Adapter<
 
         val model = this.data.value?.get(position)
 
-        holder.tempText.text = model!!.main.temperature.toString()
+        holder.tempText.text = String.format(Locale.getDefault(), "%.1f°C", model!!.main.temperature)
+        holder.container.setBackgroundColor(Utils.colorForTemp(model.main.temperature, holder.container.context))
         holder.cityNameText.text = model.name;
         holder.weatherStatusText.text = model.weather[0].main
 
@@ -36,6 +39,7 @@ class MainAdapter(var data: LiveData<List<CityWeather>>) : RecyclerView.Adapter<
 
 class MainItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    val container : View = itemView.findViewById(R.id.main_content_layout)
     val favoriteIcon : ImageView = itemView.findViewById(R.id.favorite_icon)
     val weatherIcon : ImageView = itemView.findViewById(R.id.weather_icon)
     val tempText : TextView = itemView.findViewById(R.id.temp_text)
