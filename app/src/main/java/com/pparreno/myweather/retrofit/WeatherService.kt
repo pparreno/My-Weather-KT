@@ -2,7 +2,6 @@ package com.pparreno.myweather.retrofit
 
 import com.pparreno.myweather.models.CityWeather
 import com.pparreno.myweather.models.GroupWeatherResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
