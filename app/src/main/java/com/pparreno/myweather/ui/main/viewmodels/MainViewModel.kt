@@ -23,7 +23,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val cityIDs = Utils.getPredefinedCityIDs();
         val retrievedCityWeather = repository.getGroupWeather(getApplication<Application>().resources.getString(
             R.string.api_key), Utils.buildGroupCityQueryParam(cityIDs))
-        emit(retrievedCityWeather)
+        emit(retrievedCityWeather.data)
     }
 
 }
