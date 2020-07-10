@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pparreno.myweather.R
 import com.pparreno.myweather.models.CityWeather
 import com.pparreno.myweather.utils.Utils
@@ -33,6 +34,10 @@ class MainAdapter(var data: LiveData<List<CityWeather>>) : RecyclerView.Adapter<
         holder.container.setBackgroundColor(Utils.colorForTemp(model.main.temperature, holder.container.context))
         holder.cityNameText.text = model.name;
         holder.weatherStatusText.text = model.weather[0].main
+
+        Glide.with(holder.itemView)
+            .load(model.weather[0].iconURLString())
+            .into(holder.weatherIcon)
 
     }
 }
