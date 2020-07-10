@@ -48,4 +48,8 @@ data class Weather (
     val main: String,
     val description: String,
     val icon: String
-)
+) {
+    fun iconURLString(): String {
+        return String.format("https://openweathermap.org/img/wn/%s@2x.png", icon)
+    }
+}
