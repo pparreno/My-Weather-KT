@@ -1,21 +1,24 @@
 package com.pparreno.myweather.ui.main.fragments
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pparreno.myweather.R
+import com.pparreno.myweather.models.CityWeather
 import com.pparreno.myweather.ui.main.adapters.MainAdapter
+import com.pparreno.myweather.ui.main.adapters.OnItemClickListener
 import com.pparreno.myweather.ui.main.viewmodels.MainViewModel
 import timber.log.Timber
 
-class MainFragment : Fragment() {
+
+class MainFragment : Fragment(), OnItemClickListener {
 
     companion object {
         fun newInstance() =
@@ -54,7 +57,7 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewAdapter = MainAdapter(viewModel.groupWeather)
+        viewAdapter = MainAdapter(viewModel.groupWeather, this)
         recyclerView.adapter = viewAdapter
         swipeRefreshLayout.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
             viewModel.refresh()
@@ -64,10 +67,24 @@ class MainFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.groupWeather.observe(this, Observer {
+        viewModel.groupWeather.observe(viewLifecycleOwner, Observer {
             Timber.d("length of result: %s", it.size)
             swipeRefreshLayout.isRefreshing = false
             viewAdapter.notifyDataSetChanged()
         })
     }
+
+    override fun onItemClick(item: CityWeather?) {
+        replaceFragment(item!!.name)
+    }
+
+    private fun replaceFragment(cityName : String) {
+        val newFragment: Fragment = WeatherDetailsFragment.newInstance(cityName)
+        val transaction: FragmentTransaction = activity?.supportFragmentManager!!.beginTransaction()
+        transaction.replace(R.id.container, newFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+
 }
