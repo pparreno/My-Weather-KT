@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.pparreno.myweather.R
 import com.pparreno.myweather.ui.main.viewmodels.WeatherDetailsViewModel
 import com.pparreno.myweather.utils.SharedPrefUtils
@@ -33,6 +34,7 @@ class WeatherDetailsFragment : Fragment() {
     private lateinit var tempRangeText : TextView
     private lateinit var weatherText : TextView
     private lateinit var favoriteIcon : ImageView
+    private lateinit var weatherIcon : ImageView
 
     private var isFavorite: Boolean = false
 
@@ -56,6 +58,7 @@ class WeatherDetailsFragment : Fragment() {
         temperatureText = view.findViewById(R.id.temp_text)
         tempRangeText = view.findViewById(R.id.temp_range_text)
         weatherText = view.findViewById(R.id.weather_text)
+        weatherIcon = view.findViewById(R.id.weather_icon)
         favoriteIcon = view.findViewById(R.id.favorite_icon)
 
         favoriteIcon.setOnClickListener(View.OnClickListener {
@@ -98,7 +101,9 @@ class WeatherDetailsFragment : Fragment() {
             temperatureText.text = String.format(Locale.getDefault(), "%.1f°C", it.main.temperature)
             weatherText.text = it.weather[0].main
             tempRangeText.text = String.format(Locale.getDefault(), "High %d°C / Low %d°C", it.main.tempMax.toInt(), it.main.tempMin.toInt())
-
+            Glide.with(this)
+                .load(it.weather[0].iconURLString())
+                .into(weatherIcon)
         })
     }
 
