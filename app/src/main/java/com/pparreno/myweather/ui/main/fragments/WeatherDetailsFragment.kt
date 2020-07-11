@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pparreno.myweather.R
 import com.pparreno.myweather.ui.main.viewmodels.WeatherDetailsViewModel
+import com.pparreno.myweather.utils.SharedPrefUtils
 import java.util.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,8 +24,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class WeatherDetailsFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: Boolean? = null
+    private var cityName: String? = null
 
     private lateinit var viewModel: WeatherDetailsViewModel
 
@@ -34,12 +34,16 @@ class WeatherDetailsFragment : Fragment() {
     private lateinit var weatherText : TextView
     private lateinit var favoriteIcon : ImageView
 
+    private var isFavorite: Boolean = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getBoolean(ARG_PARAM2)
+            cityName = it.getString(ARG_PARAM1)
         }
+
+
     }
 
     override fun onCreateView(
@@ -55,15 +59,28 @@ class WeatherDetailsFragment : Fragment() {
         favoriteIcon = view.findViewById(R.id.favorite_icon)
 
         favoriteIcon.setOnClickListener(View.OnClickListener {
-
+            if(isFavorite) {
+                if(SharedPrefUtils.removeCityNameAsFavorite(this.cityName!!, context!!))
+                {
+                    isFavorite = false;
+                }
+            } else {
+                if(SharedPrefUtils.setCityNameAsFavorite(this.cityName!!, context!!))
+                {
+                    isFavorite = true;
+                }
+            }
+            toggleFavoriteIconImageState()
         })
+
+        isFavorite = SharedPrefUtils.isCityNameFavorite(cityName!!, context!!)
         toggleFavoriteIconImageState()
 
         return view;
     }
 
     private fun toggleFavoriteIconImageState() {
-        if(param2!!) {
+        if(isFavorite) {
             favoriteIcon.setImageResource(R.drawable.ic_favorite_filled)
         } else {
             favoriteIcon.setImageResource(R.drawable.ic_favorite)
@@ -72,13 +89,16 @@ class WeatherDetailsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
-        viewModel.cityName = param1!!
+        viewModel.cityName = cityName!!
         viewModel.cityWeather.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             cityNameText.text = it.name
+            cityName = it.name
             temperatureText.text = String.format(Locale.getDefault(), "%.1f°C", it.main.temperature)
             weatherText.text = it.weather[0].main
             tempRangeText.text = String.format(Locale.getDefault(), "High %d°C / Low %d°C", it.main.tempMax.toInt(), it.main.tempMin.toInt())
+
         })
     }
 

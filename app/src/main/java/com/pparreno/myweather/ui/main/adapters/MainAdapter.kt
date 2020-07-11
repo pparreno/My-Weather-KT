@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.pparreno.myweather.R
 import com.pparreno.myweather.models.CityWeather
+import com.pparreno.myweather.utils.SharedPrefUtils
 import com.pparreno.myweather.utils.Utils
 import java.util.*
 
@@ -42,6 +43,13 @@ class MainAdapter(var data: LiveData<List<CityWeather>>, var itemClickListener :
         holder.itemView.setOnClickListener(View.OnClickListener {
             itemClickListener.onItemClick(model)
         })
+
+        if(SharedPrefUtils.isCityNameFavorite(model.name, holder.container.context))
+        {
+            holder.favoriteIcon.visibility = View.VISIBLE
+        } else {
+            holder.favoriteIcon.visibility = View.INVISIBLE
+        }
 
     }
 }
