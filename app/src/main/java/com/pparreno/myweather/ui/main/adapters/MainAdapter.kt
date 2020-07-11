@@ -13,7 +13,7 @@ import com.pparreno.myweather.models.CityWeather
 import com.pparreno.myweather.utils.Utils
 import java.util.*
 
-class MainAdapter(var data: LiveData<List<CityWeather>>) : RecyclerView.Adapter<MainItemViewHolder>() {
+class MainAdapter(var data: LiveData<List<CityWeather>>, var itemClickListener :  OnItemClickListener) : RecyclerView.Adapter<MainItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainItemViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,17 +39,22 @@ class MainAdapter(var data: LiveData<List<CityWeather>>) : RecyclerView.Adapter<
             .load(model.weather[0].iconURLString())
             .into(holder.weatherIcon)
 
+        holder.itemView.setOnClickListener(View.OnClickListener {
+            itemClickListener.onItemClick(model)
+        })
+
     }
 }
 
 class MainItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     val container : View = itemView.findViewById(R.id.main_content_layout)
     val favoriteIcon : ImageView = itemView.findViewById(R.id.favorite_icon)
     val weatherIcon : ImageView = itemView.findViewById(R.id.weather_icon)
     val tempText : TextView = itemView.findViewById(R.id.temp_text)
     val cityNameText : TextView = itemView.findViewById(R.id.city_text)
     val weatherStatusText : TextView = itemView.findViewById(R.id.weather_text)
+}
 
-
+interface OnItemClickListener {
+    fun onItemClick(item: CityWeather?)
 }

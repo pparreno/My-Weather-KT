@@ -14,13 +14,7 @@ import timber.log.Timber
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    var repository : Repository = Repository()
-
-    val cityWeather = liveData(Dispatchers.IO) {
-        val retrievedCityWeather = repository.getCityWeather(getApplication<Application>().resources.getString(
-            R.string.api_key), "Manila")
-        emit(retrievedCityWeather)
-    }
+    var repository : Repository = Repository
 
     var groupWeather : MutableLiveData<List<CityWeather>> = liveData(Dispatchers.IO){
         Timber.d("Starting fetching of group weather")
