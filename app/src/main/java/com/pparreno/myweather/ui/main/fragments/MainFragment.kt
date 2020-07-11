@@ -75,11 +75,11 @@ class MainFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(item: CityWeather?) {
-        replaceFragment(item!!.name)
+        replaceFragment(item!!.name, false)
     }
 
-    private fun replaceFragment(cityName : String) {
-        val newFragment: Fragment = WeatherDetailsFragment.newInstance(cityName)
+    private fun replaceFragment(cityName : String, isFavorite : Boolean) {
+        val newFragment: Fragment = WeatherDetailsFragment.newInstance(cityName, isFavorite)
         val transaction: FragmentTransaction = activity?.supportFragmentManager!!.beginTransaction()
         transaction.replace(R.id.container, newFragment)
         transaction.addToBackStack(null)

@@ -1,22 +1,20 @@
 package com.pparreno.myweather.ui.main.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pparreno.myweather.R
-import com.pparreno.myweather.models.CityWeather
-import com.pparreno.myweather.ui.main.viewmodels.MainViewModel
 import com.pparreno.myweather.ui.main.viewmodels.WeatherDetailsViewModel
-import org.w3c.dom.Text
-import timber.log.Timber
 import java.util.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +24,7 @@ private const val ARG_PARAM1 = "param1"
 class WeatherDetailsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
+    private var param2: Boolean? = null
 
     private lateinit var viewModel: WeatherDetailsViewModel
 
@@ -33,11 +32,13 @@ class WeatherDetailsFragment : Fragment() {
     private lateinit var temperatureText : TextView
     private lateinit var tempRangeText : TextView
     private lateinit var weatherText : TextView
+    private lateinit var favoriteIcon : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
+            param2 = it.getBoolean(ARG_PARAM2)
         }
     }
 
@@ -51,7 +52,22 @@ class WeatherDetailsFragment : Fragment() {
         temperatureText = view.findViewById(R.id.temp_text)
         tempRangeText = view.findViewById(R.id.temp_range_text)
         weatherText = view.findViewById(R.id.weather_text)
+        favoriteIcon = view.findViewById(R.id.favorite_icon)
+
+        favoriteIcon.setOnClickListener(View.OnClickListener {
+
+        })
+        toggleFavoriteIconImageState()
+
         return view;
+    }
+
+    private fun toggleFavoriteIconImageState() {
+        if(param2!!) {
+            favoriteIcon.setImageResource(R.drawable.ic_favorite_filled)
+        } else {
+            favoriteIcon.setImageResource(R.drawable.ic_favorite)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -77,10 +93,11 @@ class WeatherDetailsFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String) =
+        fun newInstance(param1: String, param2 : Boolean) =
             WeatherDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
+                    putBoolean(ARG_PARAM2, param2)
                 }
             }
     }
