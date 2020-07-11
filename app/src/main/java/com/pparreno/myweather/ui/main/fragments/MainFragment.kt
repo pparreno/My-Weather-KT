@@ -1,7 +1,6 @@
 package com.pparreno.myweather.ui.main.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pparreno.myweather.R
 import com.pparreno.myweather.ui.main.adapters.MainAdapter
 import com.pparreno.myweather.ui.main.viewmodels.MainViewModel
+import timber.log.Timber
 
 class MainFragment : Fragment() {
 
@@ -24,6 +25,7 @@ class MainFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MainAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private val TAG: String = "MAINFRAGMENT"
     private lateinit var viewModel: MainViewModel
@@ -34,8 +36,9 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        var view = inflater.inflate(R.layout.main_fragment, container, false)
+        val view = inflater.inflate(R.layout.main_fragment, container, false)
         viewManager = LinearLayoutManager(context)
+        swipeRefreshLayout = view.findViewById(R.id.main)
         recyclerView = view.findViewById<RecyclerView>(R.id.main_recyclerview).apply {
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
@@ -53,18 +56,18 @@ class MainFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewAdapter = MainAdapter(viewModel.groupWeather)
         recyclerView.adapter = viewAdapter
+        swipeRefreshLayout.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            viewModel.refresh()
+        })
+
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.groupWeather.observe(this, Observer {
-            Log.d(TAG, "length of result: " + it.size)
+            Timber.d("length of result: %s", it.size)
+            swipeRefreshLayout.isRefreshing = false
             viewAdapter.notifyDataSetChanged()
         })
-
-
-
-
-
     }
 }
