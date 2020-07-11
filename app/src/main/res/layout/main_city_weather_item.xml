@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="45dp">
 
-            <ImageView android:layout_height="45dp" android:layout_width="45dp"
+            <ImageView android:layout_height="@dimen/fav_button_size"
+                android:layout_width="@dimen/fav_button_size"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_favorite_filled"
                 android:id="@+id/favorite_icon"/>

@@ -12,39 +12,39 @@ data class CityWeather(
     @SerializedName("wind")
     val windStats: WindStats,
     @SerializedName("clouds")
-    val cloudsStats : CloudsStats,
+    val cloudsStats: CloudsStats,
     val id: Int,
     val name: String,
     val cod: Int
 )
 
-class CloudsStats (
-    val all : Int
+class CloudsStats(
+    val all: Int
 )
 
-data class WindStats (
-    val speed : Float,
-    val deg : Int
+data class WindStats(
+    val speed: Float,
+    val deg: Int
 )
 
-data class MainStats (
+data class MainStats(
     @SerializedName("temp")
-    val temperature : Float,
-    val pressure : Int,
-    val humidity : Int,
+    val temperature: Float,
+    val pressure: Int,
+    val humidity: Int,
     @SerializedName("temp_min")
     val tempMin: Float,
     @SerializedName("temp_max")
     val tempMax: Float
 )
 
-data class Coordinates (
+data class Coordinates(
     val lon: Float,
     val lat: Float
 )
 
-data class Weather (
-    val id : Int,
+data class Weather(
+    val id: Int,
     val main: String,
     val description: String,
     val icon: String
